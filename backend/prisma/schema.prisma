@@ -13,3 +13,55 @@ datasource db {
   url = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String
+  orders    Order[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  weight      Float
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id]) 
+  orderItems  OrderItem[]
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  products Product[] 
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id]) 
+  createdAt     DateTime    @default(now())
+  confirmedAt   DateTime?  
+  statusId      String
+  status        OrderStatus @relation(fields: [statusId], references: [id])
+  orderItems    OrderItem[] 
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id]) 
+  productId String
+  product   Product  @relation(fields: [productId], references: [id]) 
+  quantity  Int      
+}
+
+model OrderStatus {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  orders Order[] 
+}
