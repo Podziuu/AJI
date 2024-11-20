@@ -1,9 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
+import { CategoriesService } from './categories.service';
 
-@Controller('/api/category')
+@Controller('/api/categories')
 export class CategoriesController {
-    @Get()
-    findAll() {
-        return 'This action returns all categories';
-    }
+  constructor(private categoriesService: CategoriesService) {}
+
+  @Get()
+  findAll() {
+    return this.categoriesService.findAll();
+  }
 }
