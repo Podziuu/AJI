@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/createProductDto';
+import { CreateAndUpdateProductDto } from './dto/createProductDto';
 
 @Controller('/api/products')
 export class ProductsController {
@@ -8,21 +8,21 @@ export class ProductsController {
 
   @Get()
   findAll() {
-    return 'This action returns all products';
+    return this.productsService.findAll();
   }
 
   @Get(':id')
-  findOne() {
-    return 'This action returns a product';
+  findOne(@Param('id') id: string) {
+    return this.productsService.findById(id);
   }
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Body() createProductDto: CreateAndUpdateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
   @Put(':id')
-  update() {
-    return 'This action updates a product';
+  update(@Param('id') id: string, @Body() updateProductDto: CreateAndUpdateProductDto) {
+    return this.productsService.update(id, updateProductDto);
   }
 }

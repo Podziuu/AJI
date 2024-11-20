@@ -13,7 +13,6 @@ describe('CategoriesService', () => {
   };
 
   beforeEach(async () => {
-    
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CategoriesService,
@@ -44,5 +43,5 @@ describe('CategoriesService', () => {
     const spy = jest.spyOn(prismaService.category, 'findMany');
     await service.findAll();
     expect(spy).toHaveBeenCalled();
-  })
+  });
 });
