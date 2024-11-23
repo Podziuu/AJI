@@ -9,6 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterUserDTO } from 'src/auth/dto/registerUserDTO';
 import { Response, Request } from 'express';
+import { LoginUserDTO } from './dto/loginUserDTO';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -20,6 +21,22 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { user, at, rt } = await this.authService.register(registerUserDTO);
+
+    res.cookie('refreshToken', rt, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return { user, at };
+  }
+
+  @Post('/login')
+  async login(
+    @Body() loginUserDTO: LoginUserDTO,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { user, at, rt} = await this.authService.login(loginUserDTO);
 
     res.cookie('refreshToken', rt, {
       httpOnly: true,

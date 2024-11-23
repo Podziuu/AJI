@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma.service';
 import { RegisterUserDTO } from 'src/auth/dto/registerUserDTO';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { LoginUserDTO } from './dto/loginUserDTO';
 
 @Injectable()
 export class AuthService {
@@ -43,6 +44,34 @@ export class AuthService {
 
     return {
       user: { name: newUser.name, email: newUser.email },
+      at: accessToken,
+      rt: refreshToken,
+    };
+  }
+
+  async login(loginUserDTO: LoginUserDTO) {
+    const { email, password } = loginUserDTO;
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Could not find user with this email');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const { accessToken, refreshToken } = await this.generateTokens(user.id);
+
+    return {
+      user: { name: user.name, email: user.email },
       at: accessToken,
       rt: refreshToken,
     };
