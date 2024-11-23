@@ -96,6 +96,7 @@ Create a `.env` file in the root directory and add the following:
 #### Auth
 * `POST /api/auth/register` - Register a new user.
 * `POST /api/auth/login` - Login a existing user.
+* `POST /api/auth/refresh` - Refresh accessToken and refreshToken
 * `POST /api/auth/logout` - Logout an user.
 
 #### Database Initialization
