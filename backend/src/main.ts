@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuard } from './auth/guards/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
@@ -13,7 +13,7 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL,
     credentials: true,
   });
-  app.useGlobalGuards(new AuthGuard(new JwtService()));
+  // app.useGlobalGuards(new AuthGuard(new JwtService()));
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

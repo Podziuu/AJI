@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, Matches, MinLength } from "class-validator";
+import { Role } from '@prisma/client';
 
 export class RegisterUserDTO {
   @IsString()
@@ -14,4 +15,7 @@ export class RegisterUserDTO {
   @Matches(/(?=.*\d)/, { message: 'Password must contain at least one digit' })
   @Matches(/(?=.*[@$!%*?&])/ , { message: 'Password must contain at least one special character' })
   password: string;
+
+  @IsEnum(Role)
+  role: Role;
 }

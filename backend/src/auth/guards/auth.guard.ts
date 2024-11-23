@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -13,12 +13,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req: Request = context.switchToHttp().getRequest();
-    const url = req.url;
     const token = req.headers['authorization']?.split(' ')[1];
-
-    if (url.includes('refresh')) {
-      return true;
-    }
 
     if (!token) {
       throw new UnauthorizedException('Token is required');
@@ -28,6 +23,7 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
+      req.user = payload;
       return true;
     } catch (err) {
       throw new UnauthorizedException('Invalid or expired token');

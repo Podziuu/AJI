@@ -1,6 +1,8 @@
-import { Controller, Get, Patch, Post } from '@nestjs/common';
+import { Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('/api/orders')
+@UseGuards(AuthGuard)
 export class OrdersController {
   @Get()
   findAll() {

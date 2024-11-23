@@ -8,12 +8,18 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum Role {
+  WORKER
+  CLIENT
+}
+
 model User {
   id       String  @id @default(uuid())
   name     String
   email    String  @unique
   password String
   orders   Order[]
+  role     Role    @default(CLIENT)
 }
 
 model Product {

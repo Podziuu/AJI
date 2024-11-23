@@ -8,6 +8,7 @@ import { RegisterUserDTO } from 'src/auth/dto/registerUserDTO';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDTO } from './dto/loginUserDTO';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
   ) {}
 
   async register(registerUserDTO: RegisterUserDTO) {
-    const { name, email, password } = registerUserDTO;
+    const { name, email, password, role } = registerUserDTO;
 
     const existingUser = await this.prisma.user.findUnique({
       where: {
@@ -37,6 +38,7 @@ export class AuthService {
         name,
         email,
         password: hashedPassword,
+        role: role || Role.CLIENT,
       },
     });
 
