@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { CreateAndUpdateProductDto } from './dto/createProductDto';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma.service';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -21,6 +23,20 @@ describe('ProductsController', () => {
         {
           provide: ProductsService,
           useValue: mockProductsService
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            verifyAsync: jest.fn(),
+          },
+        },
+        {
+          provide: PrismaService,
+          useValue: {
+            user: {
+              findUnique: jest.fn().mockResolvedValue({ id: 'userId', role: 'WORKER' }),
+            }
+          }
         }
       ],
     }).compile();

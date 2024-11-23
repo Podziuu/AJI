@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoriesController } from './categories.controller';
 import { CategoriesService } from './categories.service';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma.service';
 
 describe('CategoriesController', () => {
   let controller: CategoriesController;
@@ -19,6 +21,20 @@ describe('CategoriesController', () => {
           provide: CategoriesService,
           useValue: mockCategoriesService,
         },
+        {
+          provide: JwtService,
+          useValue: {
+            verifyAsync: jest.fn(),
+          },
+        },
+        {
+          provide: PrismaService,
+          useValue: {
+            user: {
+              findUnique: jest.fn().mockResolvedValue({ id: 'userId', role: 'WORKER' }),
+            }
+          }
+        }
       ],
     }).compile();
 
