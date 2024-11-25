@@ -1,14 +1,10 @@
 import { IsString, IsNotEmpty, IsOptional, IsDateString, IsArray } from 'class-validator';
-import { CreateAndUpdateProductDto } from 'src/products/dto/createProductDto';
+import { OrderItemDTO } from './orderItemDTO';
 
 export class OrderDTO {
   @IsString()
   @IsNotEmpty()
   userId: string;
-
-  @IsNotEmpty()
-  @IsDateString() 
-  createdAt: string; 
 
   @IsOptional()  
   @IsDateString() 
@@ -18,6 +14,6 @@ export class OrderDTO {
   @IsString()
   statusId: string;
 
-//   @IsArray()
-//   orderItems: CreateAndUpdateProductDto[];
+  @IsArray()
+  orderItems: OrderItemDTO[];
 }

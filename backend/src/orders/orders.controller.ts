@@ -1,26 +1,46 @@
-import { Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { OrdersService } from './orders.service';
+import { OrderDTO } from './dto/orderDTO';
+import { ChangeOrderStatusDTO } from './dto/changeOrderStatusDTO';
 
 @Controller('/api/orders')
 @UseGuards(AuthGuard)
 export class OrdersController {
+  constructor(private readonly ordersService: OrdersService) {}
+
   @Get()
   findAll() {
-    return 'This action returns all orders';
+    return this.ordersService.findAll();
+  }
+
+  @Get('/user/:id')
+  findByUserId(@Param('id') id: string) {
+    return this.ordersService.findByUserId(id);
+  }
+
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.ordersService.findById(id);
   }
 
   @Post()
-  create() {
-    return 'This action adds a new order';
+  create(@Body() orderDTO: OrderDTO) {
+    return this.ordersService.create(orderDTO);
   }
 
   @Patch(':id')
-  update() {
-    return 'This action updates an order';
+  changeOrderStatus(@Param('id') id: string, @Body() changeOrderStatusDTO: ChangeOrderStatusDTO) {
+    return this.ordersService.changeStatus(id, changeOrderStatusDTO);
   }
 
-  @Get('/:status/:id')
-  findStatus() {
-    return 'This action returns the status of an order';
+  @Get('/status/:id')
+  findByStatusId(@Param('id') id: string) {
+    return this.ordersService.findByStatus(id);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() orderDTO: OrderDTO) {
+    return this.ordersService.update(id, orderDTO);
   }
 }
