@@ -1,0 +1,27 @@
+{
+    "Products":[
+{
+    "name": "Laptop",
+    "price": 2999,
+    "description": "Wspanialy laptop do nauki",
+    "weight": 599,
+    "categoryId": "e96c4140-6455-44f2-b87d-856e2c30c591"
+},
+
+{
+    "name": "Atlas zwierzat",
+    "price": 80,
+    "description": "Atlas zwierzat afrykanskich dla dzieci",
+    "weight": 300,
+    "categoryId": "07f79981-802f-4f2f-bb1a-b065a34ed78a"
+},
+
+{
+    "name": "Czapka",
+    "price": 50,
+    "description": "Wygodna czapka na zime",
+    "weight": 100,
+    "categoryId": "7b7e04c7-19f5-4dc7-9eb2-a5a2f59e239a"
+}
+]
+}
