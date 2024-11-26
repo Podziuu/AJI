@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class StatusService {
     constructor(private readonly prisma: PrismaService) {}
     
-    findAll() {
-        return this.prisma.orderStatus.findMany();
+    async findAll() {
+        const statuses = await this.prisma.orderStatus.findMany();
+        if (statuses.length === 0) {
+            throw new NotFoundException('No statuses found');
+        }
+        return statuses;
     }
 }
