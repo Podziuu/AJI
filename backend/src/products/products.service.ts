@@ -14,19 +14,35 @@ export class ProductsService {
     return this.prisma.product.create({ data });
   }
 
-  findById(id: string) {
-    return this.prisma.product.findUnique({
+  async findById(id: string) {
+    const product = await this.prisma.product.findUnique({
       where: {
         id,
       },
     });
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    return product;
   }
 
-  findAll() {
-    return this.prisma.product.findMany();
+  async findAll() {
+    const products = await this.prisma.product.findMany();
+    if (products.length === 0) {
+      throw new NotFoundException('No products found');
+    }
+    return products;
   }
 
-  update(id: string, data: CreateAndUpdateProductDto) {
+  async update(id: string, data: CreateAndUpdateProductDto) {
+    const existingProduct = await this.prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!existingProduct) {
+      throw new NotFoundException(`Product with id ${id} not found`);
+    }
+
     return this.prisma.product.update({
       where: { id },
       data,
