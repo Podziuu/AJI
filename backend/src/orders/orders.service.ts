@@ -4,6 +4,7 @@ import { OrderStatus } from '@prisma/client';
 import { OrderDTO } from './dto/orderDTO';
 import { PrismaService } from 'src/prisma.service';
 import { ChangeOrderStatusDTO } from './dto/changeOrderStatusDTO';
+import { reviewDTO } from './dto/reviewDTO';
 
 
 @Injectable()
@@ -31,6 +32,7 @@ export class OrdersService {
                             product: true,
                         },
                     },
+                    review: true,
                 },
             });
         return this.mapOrderItems(orders);
@@ -166,6 +168,40 @@ export class OrdersService {
             },
         });
         return this.mapOrderItems([updatedOrder]);
+    }
+
+    async review(id: string, data: reviewDTO, userId: string) {
+        const order = await this.prisma.order.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                status: true,
+            },
+        });
+
+        if (order.userId !== userId) {
+            throw new Error('You are not allowed to review this order');
+        }
+
+        if (order.status.name !== "CANCELLED" && order.status.name !== "COMPLETED") {
+            throw new Error('You can only review delivered orders');
+        }
+
+        const reviewedOrder = await this.prisma.review.create({
+            data: {
+                order: { connect: { id: id } }, 
+                rating: data.rating,
+                content: data.content,      
+            },
+        });
+        return {
+            id: reviewedOrder.id,
+            rating: reviewedOrder.rating,
+            content: reviewedOrder.content,
+            orderId: reviewedOrder.orderId,
+        };
+
     }
 
 }

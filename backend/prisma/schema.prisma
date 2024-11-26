@@ -48,6 +48,7 @@ model Order {
   status      OrderStatus @relation(fields: [statusId], references: [id])
   user        User        @relation(fields: [userId], references: [id])
   orderItems  OrderItem[]
+  review      Review? 
 }
 
 model OrderItem {
@@ -64,3 +65,12 @@ model OrderStatus {
   name   String  @unique
   orders Order[]
 }
+
+model Review {
+  id        String   @id @default(uuid())
+  orderId   String   @unique 
+  rating    Int      
+  content   String
+  order     Order    @relation(fields: [orderId], references: [id])
+}
+
