@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class OrderItemDTO {
     @IsString()
@@ -7,5 +7,6 @@ export class OrderItemDTO {
     
     @IsNumber()
     @IsNotEmpty()
+    @Min(1)
     quantity: number;
 }
