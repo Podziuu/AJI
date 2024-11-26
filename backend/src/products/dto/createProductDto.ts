@@ -15,10 +15,10 @@ export class CreateAndUpdateProductDto {
   @MinLength(10)
   description: string;
   @IsNumber()
-  @Min(0)
+  @Min(1)
   price: number;
   @IsNumber()
-  @Min(0)
+  @Min(1)
   weight: number;
   @IsString()
   @IsNotEmpty()

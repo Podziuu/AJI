@@ -14,6 +14,7 @@ describe('ProductsController', () => {
     findById: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
+    getSeoDescription: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -89,4 +90,14 @@ describe('ProductsController', () => {
       expect(service.update).toHaveBeenCalledWith('1', updatedProduct);
     })
   })
+
+  describe('getSeoDescription', () => {
+    it('should call ProductsService.getSeoDescription and return SEO description', async () => {
+      const seoDescription = 'This is a great product for learning.';
+      mockProductsService.getSeoDescription.mockResolvedValue(seoDescription);
+
+      expect(await controller.getSeoDescription('1')).toEqual(seoDescription);
+      expect(service.getSeoDescription).toHaveBeenCalledWith('1');
+    });
+  });
 });

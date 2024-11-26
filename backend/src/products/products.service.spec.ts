@@ -2,10 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateAndUpdateProductDto } from './dto/createProductDto';
+import { OpenAiService } from './openai.service';
+import { NotFoundException } from '@nestjs/common';
 
 describe('ProductsService', () => {
   let service: ProductsService;
   let prisma: PrismaService;
+  let openaiService: OpenAiService;
 
   const mockPrismaService = {
     product: {
@@ -16,6 +19,10 @@ describe('ProductsService', () => {
     },
   };
 
+  const mockOpenAiService = {
+    generateSeoDescription: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -24,11 +31,16 @@ describe('ProductsService', () => {
           provide: PrismaService,
           useValue: mockPrismaService,
         },
+        {
+          provide: OpenAiService,
+          useValue: mockOpenAiService,
+        },
       ],
     }).compile();
 
     service = module.get<ProductsService>(ProductsService);
     prisma = module.get<PrismaService>(PrismaService);
+    openaiService = module.get<OpenAiService>(OpenAiService);
   });
 
   it('should be defined', () => {
@@ -81,4 +93,30 @@ describe('ProductsService', () => {
       expect(prisma.product.update).toHaveBeenCalledWith({where: {id: '1'}, data: updatedProduct});
     })
   })
+
+  describe('getSeoDescription', () => {
+    it('should call OpenAiService.generateSeoDescription and return description', async () => {
+      const product = { id: '1', name: 'Laptop', description: 'Wspanialy laptop do nauki', price: 2999, weight: 699, category: { name: 'Electronics' } };
+      const seoDescription = 'SEO description for Laptop in Electronics category';
+      
+      mockPrismaService.product.findUnique.mockResolvedValue(product);
+      mockOpenAiService.generateSeoDescription.mockResolvedValue(seoDescription);
+
+      expect(await service.getSeoDescription('1')).toEqual(seoDescription);
+      expect(prisma.product.findUnique).toHaveBeenCalledWith({ where: { id: '1' }, include: { category: true } });
+      expect(openaiService.generateSeoDescription).toHaveBeenCalledWith({
+        name: product.name,
+        category: product.category.name,
+        description: product.description,
+        price: product.price,
+        weight: product.weight,
+      });
+    });
+
+    it('should throw NotFoundException if product not found', async () => {
+      mockPrismaService.product.findUnique.mockResolvedValue(null);
+
+      await expect(service.getSeoDescription('1')).rejects.toThrow(NotFoundException);
+    });
+  });
 });

@@ -30,4 +30,9 @@ export class ProductsController {
   update(@Param('id') id: string, @Body() updateProductDto: CreateAndUpdateProductDto) {
     return this.productsService.update(id, updateProductDto);
   }
+
+  @Get(':id/seo-description')
+  getSeoDescription(@Param('id') id: string) {
+    return this.productsService.getSeoDescription(id);
+  }
 }
