@@ -11,6 +11,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     origin: process.env.FRONTEND_URL,
+    methods: 'GET,HEAD,POST,PUT,DELETE,PATCH',
     credentials: true,
   });
   // app.useGlobalGuards(new AuthGuard(new JwtService()));
