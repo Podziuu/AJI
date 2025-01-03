@@ -27,7 +27,11 @@ export class ProductsService {
   }
 
   async findAll() {
-    const products = await this.prisma.product.findMany();
+    const products = await this.prisma.product.findMany({
+      include: {
+        category: true,
+      }
+    });
     if (products.length === 0) {
       throw new NotFoundException('No products found');
     }

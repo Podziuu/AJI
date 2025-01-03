@@ -8,7 +8,7 @@ export class CategoriesController {
   constructor(private categoriesService: CategoriesService) {}
 
   @Get()
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   findAll() {
     return this.categoriesService.findAll();
   }
