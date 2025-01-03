@@ -67,7 +67,7 @@ const RegisterForm = () => {
     }
     console.log(result);
     // save token to local storage
-    window.localStorage.setItem("access-token", result.at);
+    window.localStorage.setItem("accessToken", result.at);
     // redirect to home page
     navigate("/");
   };

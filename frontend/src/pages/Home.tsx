@@ -1,9 +1,23 @@
-import React from 'react'
+import ProductsTable from "@/components/ProductsTable";
+import { useEffect } from "react";
+import apiClient from "@/lib/apiClient";
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await apiClient.get("/products");
+      console.log(response.data);
+    };
 
-export default Home
+    fetchProducts();
+  }, []);
+
+  return (
+    <div>
+      Home
+      <ProductsTable />
+    </div>
+  );
+};
+
+export default Home;

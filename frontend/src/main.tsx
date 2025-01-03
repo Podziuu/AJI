@@ -6,18 +6,54 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "./pages/Home.tsx";
 import Register from "./pages/Register.tsx";
 import { Toaster } from "./components/ui/toaster.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} /> {/* Main page that consists table of products */}
-        <Route path="/cart" element={<App />} /> {/* Cart */}
-        <Route path="/orders" element={<App />} /> {/* Order view only for worker role */}
-        <Route path="/login" element={<App />} /> {/* Login page */}
-        <Route path="/register" element={<Register />} /> {/* Register page */}
-        <Route path="/initialize" element={<App />} /> {/* Page to initialize db */}
-        <Route path="/register" element={<App />} /> {/* Form to add new review and view all of reviews */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <App />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <App />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={<App />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/initialize"
+          element={
+            <ProtectedRoute>
+              <App />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reviews"
+          element={
+            <ProtectedRoute>
+              <App />
+            </ProtectedRoute>
+          }
+        />{" "}
       </Routes>
       <Toaster />
     </BrowserRouter>
