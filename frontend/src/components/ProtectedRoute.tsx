@@ -1,17 +1,30 @@
-import { Navigate } from "react-router";
-import { isAuthenticated } from "@/lib/utils";
-import React from "react";
+import { Navigate, Outlet } from "react-router";
+import { useEffect, useState } from "react";;
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
+const ProtectedRoute = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  if (!isAuthenticated()) {
+  useEffect(() => {
+    const checkAuth = async () => {
+      const response = await fetch('/api/auth/check', {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+  }, [])
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />
 };
 
 export default ProtectedRoute;
