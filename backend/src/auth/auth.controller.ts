@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   Res,
@@ -36,7 +37,7 @@ export class AuthController {
     @Body() loginUserDTO: LoginUserDTO,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { user, at, rt} = await this.authService.login(loginUserDTO);
+    const { user, at, rt } = await this.authService.login(loginUserDTO);
 
     res.cookie('refreshToken', rt, {
       httpOnly: true,
@@ -68,5 +69,21 @@ export class AuthController {
     });
 
     return { accessToken };
+  }
+
+  @Get('/check')
+  async check(@Req() req: Request) {
+    const rt = req.cookies['refreshToken'];
+
+    if (!rt) {
+      throw new UnauthorizedException('Refresh token is required');
+    }
+
+    try {
+      const decoded = this.authService.validateRefreshToken(rt);
+      return { message: 'Authenticated', user: decoded };
+    } catch (err) {
+      throw new UnauthorizedException(err.message);
+    }
   }
 }

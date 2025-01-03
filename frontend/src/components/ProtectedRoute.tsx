@@ -2,7 +2,8 @@ import { Navigate, Outlet } from "react-router";
 import { useEffect, useState } from "react";;
 
 const ProtectedRoute = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -11,15 +12,23 @@ const ProtectedRoute = () => {
         credentials: 'include',
       });
 
+      console.log(response);
+
       if (response.ok) {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
       }
+      setLoading(false);
     };
 
     checkAuth();
   }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }

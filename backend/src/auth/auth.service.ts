@@ -116,4 +116,16 @@ export class AuthService {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }
+
+  validateRefreshToken(refreshToken: string) {
+    try {
+      const decoded = this.jwtService.verify(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      })
+      return decoded;
+    }
+    catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+  }
 }
