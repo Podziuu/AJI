@@ -1,6 +1,7 @@
 import ProductsTable from "@/components/ProductsTable";
 import { useEffect, useState } from "react";
 import apiClient from "@/lib/apiClient";
+import Navbar from "@/components/Navbar";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -20,6 +21,7 @@ const Home = () => {
 
   return (
     <div>
+      <Navbar />
       <h1 className="text-bold text-5xl text-center my-8">List of Products</h1>
       <ProductsTable products={products} categories={categories} />
     </div>
