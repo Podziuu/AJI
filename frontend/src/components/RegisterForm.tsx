@@ -65,10 +65,7 @@ const RegisterForm = () => {
         variant: "destructive",
       });
     }
-    console.log(result);
-    // save token to local storage
     window.localStorage.setItem("accessToken", result.at);
-    // redirect to home page
     navigate("/");
   };
   return (

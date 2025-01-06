@@ -1,39 +1,49 @@
 import { Navigate, Outlet } from "react-router";
-import { useEffect, useState } from "react";;
+import { useEffect, useState } from "react";
+import { useUserStore } from "@/store";
 
-const ProtectedRoute = () => {
+const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: Role[] }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState<Role | null>(null);
+  const { setUser, clearUser } = useUserStore();
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await fetch('/api/auth/check', {
-        method: 'GET',
-        credentials: 'include',
+      const response = await fetch("/api/auth/check", {
+        method: "GET",
+        credentials: "include",
       });
 
-      console.log(response);
+      const result = await response.json();
 
       if (response.ok) {
         setIsAuthenticated(true);
+        setRole(result.user.role);
+        setUser(result.user);
       } else {
         setIsAuthenticated(false);
+        clearUser();
       }
       setLoading(false);
     };
 
     checkAuth();
-  }, [])
+  }, []);
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />
+  if (allowedRoles && !allowedRoles.includes(role!)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

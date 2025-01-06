@@ -17,14 +17,6 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 
-
-interface DropdownProps {
-  label: string;
-  options: Category[] | Status[];
-  selected: string;
-  onSelect: (value: string) => void;
-}
-
 const Dropdown = ({ label, options, selected, onSelect }: DropdownProps) => {
   const [open, setOpen] = useState(false);
   return (

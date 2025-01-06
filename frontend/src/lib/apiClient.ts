@@ -42,7 +42,6 @@ apiClient.interceptors.request.use(async (config) => {
       const response = await refreshClient.post<RefreshResponse>(
         "/auth/refresh"
       );
-      console.log(response);
       accessToken = response.data.accessToken;
 
       localStorage.setItem("accessToken", accessToken);

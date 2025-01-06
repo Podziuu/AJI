@@ -42,7 +42,10 @@ export class AuthService {
       },
     });
 
-    const { accessToken, refreshToken } = await this.generateTokens(newUser.id);
+    const { accessToken, refreshToken } = await this.generateTokens(
+      newUser.id,
+      newUser.role,
+    );
 
     return {
       user: { name: newUser.name, email: newUser.email },
@@ -70,7 +73,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const { accessToken, refreshToken } = await this.generateTokens(user.id);
+    const { accessToken, refreshToken } = await this.generateTokens(
+      user.id,
+      user.role,
+    );
 
     return {
       user: { name: user.name, email: user.email },
@@ -79,8 +85,8 @@ export class AuthService {
     };
   }
 
-  async generateTokens(userId: string) {
-    const payload = { id: userId };
+  async generateTokens(userId: string, role: Role) {
+    const payload = { id: userId, role };
 
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: '15m',
@@ -111,7 +117,7 @@ export class AuthService {
         throw new UnauthorizedException('Invalid token');
       }
 
-      return this.generateTokens(user.id);
+      return this.generateTokens(user.id, user.role);
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
@@ -121,10 +127,9 @@ export class AuthService {
     try {
       const decoded = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
-      })
+      });
       return decoded;
-    }
-    catch (error) {
+    } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }

@@ -14,20 +14,19 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
 
-const formSchema = z
-  .object({
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number")
-      .regex(
-        /[@$!%*?&]/,
-        "Password must contain at least one special character (@, $, !, %, *, ?, &)"
-      ),
-  })
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(
+      /[@$!%*?&]/,
+      "Password must contain at least one special character (@, $, !, %, *, ?, &)"
+    ),
+});
 
 const LoginForm = () => {
   const { toast } = useToast();
@@ -56,10 +55,7 @@ const LoginForm = () => {
         variant: "destructive",
       });
     }
-    console.log(result);
-    // save token to local storage
     window.localStorage.setItem("accessToken", result.at);
-    // redirect to home page
     navigate("/");
   };
   return (

@@ -11,7 +11,6 @@ const Home = () => {
     const fetchProducts = async () => {
       const response = await apiClient.get("/products");
       const responseCategories = await apiClient.get("/categories");
-      console.log(responseCategories);
       setProducts(response.data);
       setCategories(responseCategories.data);
     };

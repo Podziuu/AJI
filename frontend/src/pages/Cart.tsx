@@ -3,8 +3,7 @@ import Navbar from "@/components/Navbar";
 import { useStore } from "@/store/index";
 
 const Cart = () => {
-  //@ts-ignore
-  const {cart} = useStore();
+  const { cart } = useStore();
   return (
     <div>
       <Navbar />

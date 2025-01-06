@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
 import { Button } from "./ui/button";
 import { useStore } from "@/store";
+import { useToast } from "@/hooks/use-toast";
 
 const ProductsTable = ({
   products,
@@ -24,6 +25,8 @@ const ProductsTable = ({
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const { addToCart } = useStore();
+  const { toast } = useToast();
 
   useEffect(() => {
     let filtered = products;
@@ -43,11 +46,10 @@ const ProductsTable = ({
     setFilteredProducts(filtered);
   }, [searchTerm, selectedCategory, products]);
 
-  //@ts-ignore
-  const { addToCart } = useStore();
-  const clickHandler = (product : Product) => {
+  const clickHandler = (product: Product) => {
     addToCart(product);
-  }
+    toast({ title: "Product added to cart" });
+  };
 
   return (
     <div className="p-8">
@@ -93,7 +95,9 @@ const ProductsTable = ({
                 <TableCell>{product.category.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
                 <TableCell>
-                  <Button onClick={() => clickHandler(product)}>Add to cart</Button>
+                  <Button onClick={() => clickHandler(product)}>
+                    Add to cart
+                  </Button>
                 </TableCell>
               </TableRow>
             ))
