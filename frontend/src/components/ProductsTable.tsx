@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useStore } from "@/store/index";
 
 interface Product {
   id: string;
@@ -70,6 +71,12 @@ const ProductsTable = ({
 
     setFilteredProducts(filtered);
   }, [searchTerm, selectedCategory, products]);
+
+  //@ts-ignore
+  const { addToCart } = useStore();
+  const clickHandler = (product : Product) => {
+    addToCart(product);
+  }
 
   return (
     <div className="p-8">
@@ -144,6 +151,7 @@ const ProductsTable = ({
             <TableHead>Weight</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Description</TableHead>
+            <TableHead>Add to cart</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -155,6 +163,9 @@ const ProductsTable = ({
                 <TableCell>{product.weight}</TableCell>
                 <TableCell>{product.category.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
+                <TableCell>
+                <Button onClick={() => clickHandler(product)}>Add to cart</Button>
+                </TableCell>
               </TableRow>
             ))
           ) : (
