@@ -10,13 +10,15 @@ import {
   } from "@/components/ui/table";
 import { Button } from './ui/button';
 import { useStore } from "@/store/index";
-
+import { useNavigate } from 'react-router';
 
 
 
 export const CartTable = ({cart} : any) => {
     //@ts-ignore
     const { addToCart, reduceQuantity, removeFromCart } = useStore();
+    const navigate = useNavigate();
+
     const plusClickHandler = (product : any) => {
         addToCart(product);
     }
@@ -30,6 +32,10 @@ export const CartTable = ({cart} : any) => {
     }
 
     const calculateTotalPrice = cart.reduce((sum : number, product : any) => sum + product.price * product.quantity, 0);
+
+    const checkoutHandler = () => {
+        navigate("/checkout")
+    }
 
   return (
     <div>
@@ -69,6 +75,13 @@ export const CartTable = ({cart} : any) => {
                 <TableRow>
                     <TableCell>Total price</TableCell>
                     <TableCell>{calculateTotalPrice}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell colSpan={7} style={{ textAlign: 'right' }}>
+                        <Button onClick={() => checkoutHandler()} className="mt-4">
+                            Proceed to Checkout
+                        </Button>
+                    </TableCell>
                 </TableRow>
             </>
           ) : (
