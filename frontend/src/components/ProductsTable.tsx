@@ -10,36 +10,7 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  weight: number;
-  category: Category;
-  description: string;
-}
-
-interface Category {
-  id: string;
-  name: string;
-}
+import Dropdown from "./Dropdown";
 
 const ProductsTable = ({
   products,
@@ -51,7 +22,6 @@ const ProductsTable = ({
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let filtered = products;
@@ -85,54 +55,12 @@ const ProductsTable = ({
           />
         </div>
 
-        <div className="flex flex-col space-y-2">
-          <Label>Category</Label>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-[200px] justify-between"
-              >
-                {selectedCategory ? selectedCategory : "Select category..."}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-              <Command>
-                <CommandInput placeholder="Search category..." />
-                <CommandList>
-                  <CommandEmpty>No category found.</CommandEmpty>
-                  <CommandGroup>
-                    {categories.map((category) => (
-                      <CommandItem
-                        key={category.id}
-                        value={category.name}
-                        onSelect={(currentValue) => {
-                          setSelectedCategory(
-                            currentValue === selectedCategory ? "" : currentValue
-                          );
-                          setOpen(false);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            selectedCategory === category.name
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {category.name}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
+        <Dropdown
+          label="Category"
+          options={categories}
+          selected={selectedCategory}
+          onSelect={setSelectedCategory}
+        />
       </div>
 
       <Table>
