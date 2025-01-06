@@ -9,10 +9,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
 import { useStore } from "@/store/index";
+import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
 
 export const CartTable = ({ cart }: { cart: Product[] }) => {
   const { addToCart, reduceQuantity, removeFromCart } = useStore();
+  const navigate = useNavigate();
+
   const { toast } = useToast();
   const plusClickHandler = (product: Product) => {
     addToCart(product);
@@ -32,6 +35,10 @@ export const CartTable = ({ cart }: { cart: Product[] }) => {
       sum + product.price * (product.quantity || 1),
     0
   );
+
+  const checkoutHandler = () => {
+    navigate("/checkout");
+  };
 
   return (
     <div>
@@ -55,12 +62,18 @@ export const CartTable = ({ cart }: { cart: Product[] }) => {
                   <TableCell>{product.price}</TableCell>
                   <TableCell>
                     <div className="space-x-2">
-                      <Button className="p-3 py-0 h-fit" onClick={() => minusClickHandler(product)}>
+                      <Button
+                        className="p-3 py-0 h-fit"
+                        onClick={() => minusClickHandler(product)}
+                      >
                         {" "}
                         -
                       </Button>
                       <span>{product.quantity}</span>
-                      <Button className="p-3 py-0 h-fit" onClick={() => plusClickHandler(product)}>
+                      <Button
+                        className="p-3 py-0 h-fit"
+                        onClick={() => plusClickHandler(product)}
+                      >
                         +
                       </Button>
                     </div>
@@ -79,6 +92,13 @@ export const CartTable = ({ cart }: { cart: Product[] }) => {
               <TableRow>
                 <TableCell>Total price</TableCell>
                 <TableCell>{calculateTotalPrice}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={7} style={{ textAlign: "right" }}>
+                  <Button onClick={() => checkoutHandler()} className="mt-4">
+                    Proceed to Checkout
+                  </Button>
+                </TableCell>
               </TableRow>
             </>
           ) : (
