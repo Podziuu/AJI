@@ -4,7 +4,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('/api/status')
-@UseGuards(AuthGuard, RolesGuard)
+@UseGuards(AuthGuard)
 export class StatusController {
   constructor(private statusService: StatusService) {}
 
