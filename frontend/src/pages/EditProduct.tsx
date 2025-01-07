@@ -1,4 +1,5 @@
 import EditProductForm from "@/components/EditProductForm";
+import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
 import {
   Card,
@@ -29,20 +30,22 @@ const EditProduct = () => {
 
   return (
     <div className="flex flex-col">
-      <Navbar />
-      <Card className="max-w-[450px] mx-auto mt-10 w-full text-center">
-        <CardHeader>
-          <CardTitle>Edit Product</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {product ? (
-            <EditProductForm product={product} />
-          ) : (
-            <p>Loading...</p>
-          )}
-        </CardContent>
-      </Card>
+      {product ? (
+        <>
+          <Navbar />
+          <Card className="max-w-[450px] mx-auto mt-10 w-full text-center">
+            <CardHeader>
+              <CardTitle>Edit Product</CardTitle>
+              <CardDescription>Card Description</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <EditProductForm product={product} />
+            </CardContent>
+          </Card>
+        </>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };

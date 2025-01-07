@@ -69,7 +69,7 @@ const EditProductForm = ({ product }: { product: Product }) => {
         });
       }
     } catch (err) {
-      toast({ title: "Error updating product", variant: "destructive" });
+      console.log(err);
     }
   };
 

@@ -1,4 +1,5 @@
 import Dropdown from "@/components/Dropdown";
+import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UnfulfilledOrdersTable from "@/components/UnfulfilledOrdersTable";
@@ -13,21 +14,35 @@ const Orders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await apiClient.get("/orders");
-      setOrders(response.data);
-      setUnfulfilledOrders(
-        response.data.filter((order: Order) => order.status.name === "PENDING")
-      );
+      try {
+        const response = await apiClient.get("/orders");
+        setOrders(response.data);
+        setUnfulfilledOrders(
+          response.data.filter(
+            (order: Order) => order.status.name === "PENDING"
+          )
+        );
+      } catch (err) {
+        console.log("Error fetching orders", err);
+      }
     };
 
     const fetchStatuses = async () => {
-      const response = await apiClient.get("/status");
-      setStatuses(response.data);
+      try {
+        const response = await apiClient.get("/status");
+        setStatuses(response.data);
+      } catch (err) {
+        console.log("Error fetching statuses", err);
+      }
     };
 
     fetchOrders();
     fetchStatuses();
   }, []);
+
+  if (orders.length === 0 || statuses.length === 0) {
+    return <Loader />;
+  }
 
   return (
     <div>

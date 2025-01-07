@@ -10,22 +10,29 @@ const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: Role[] }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await fetch("/api/auth/check", {
-        method: "GET",
-        credentials: "include",
-      });
+      try {
+        const response = await fetch("/api/auth/check", {
+          method: "GET",
+          credentials: "include",
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (response.ok) {
-        setIsAuthenticated(true);
-        setRole(result.user.role);
-        setUser(result.user);
-      } else {
+        if (response.ok) {
+          setIsAuthenticated(true);
+          setRole(result.user.role);
+          setUser(result.user);
+        } else {
+          setIsAuthenticated(false);
+          clearUser();
+        }
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
         setIsAuthenticated(false);
         clearUser();
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     checkAuth();

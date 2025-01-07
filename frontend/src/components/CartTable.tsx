@@ -66,7 +66,6 @@ export const CartTable = ({ cart }: { cart: Product[] }) => {
                         className="p-3 py-0 h-fit"
                         onClick={() => minusClickHandler(product)}
                       >
-                        {" "}
                         -
                       </Button>
                       <span>{product.quantity}</span>
@@ -83,8 +82,7 @@ export const CartTable = ({ cart }: { cart: Product[] }) => {
                   </TableCell>
                   <TableCell>
                     <Button onClick={() => removeClickHandler(product)}>
-                      {" "}
-                      Remove{" "}
+                      Remove
                     </Button>
                   </TableCell>
                 </TableRow>

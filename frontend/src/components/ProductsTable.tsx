@@ -113,7 +113,12 @@ const ProductsTable = ({
                 <TableCell>{product.category.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
                 <TableCell>
-                  <Button onClick={() => clickHandler(product)}>
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clickHandler(product);
+                    }}
+                  >
                     Add to cart
                   </Button>
                 </TableCell>

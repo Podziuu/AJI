@@ -42,13 +42,17 @@ const CheckoutForm = ({ cart }: any) => {
       })),
     };
 
-    const response = await apiClient.post("/orders", requestBody); //, {
+    try {
+      const response = await apiClient.post("/orders", requestBody); //, {
 
-    const result = response.data;
+      const result = response.data;
 
-    console.log(result);
+      console.log(result);
 
-    navigate("/");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <Form {...form}>
