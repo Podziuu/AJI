@@ -31,8 +31,6 @@ const ProductsTable = ({
   const { user } = useUserStore();
   const navigate = useNavigate();
 
-  console.log(user);
-
   useEffect(() => {
     let filtered = products;
 
@@ -57,7 +55,6 @@ const ProductsTable = ({
   };
 
   const editProduct = (id: string) => {
-    console.log(id);
     navigate("/products/edit/" + id);
   };
 

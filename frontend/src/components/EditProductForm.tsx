@@ -50,7 +50,6 @@ const EditProductForm = ({ product }: { product: Product }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       const response = await apiClient.get("/categories");
-      console.log(response.data);
       setCategories(response.data);
     };
     fetchCategories();

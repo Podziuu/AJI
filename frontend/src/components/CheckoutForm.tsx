@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router";
 import apiClient from "@/lib/apiClient";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -22,6 +23,7 @@ const formSchema = z.object({
 
 const CheckoutForm = ({ cart }: any) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,6 +33,7 @@ const CheckoutForm = ({ cart }: any) => {
     },
   });
 
+  // @ts-ignore
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const requestBody = {
       userId: "96a48b2a-8b59-442d-a6a2-6af92848c6fc",
@@ -47,7 +50,13 @@ const CheckoutForm = ({ cart }: any) => {
 
       const result = response.data;
 
-      console.log(result);
+      if (response.status !== 200) {
+        toast({
+          title: "Order failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
 
       navigate("/");
     } catch (err) {
