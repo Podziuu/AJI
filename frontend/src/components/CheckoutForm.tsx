@@ -65,7 +65,10 @@ const CheckoutForm = ({ cart }: any) => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 text-left"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -106,9 +109,11 @@ const CheckoutForm = ({ cart }: any) => {
           )}
         />
 
-        <Button type="submit" className="">
-          Submit
-        </Button>
+        <div className="flex justify-center">
+          <Button type="submit" className="">
+            Submit
+          </Button>
+        </div>
       </form>
     </Form>
   );
