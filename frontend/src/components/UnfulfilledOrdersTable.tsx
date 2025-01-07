@@ -34,6 +34,8 @@ const UnfulfilledOrdersTable = ({
     setFilteredOrders(filtered);
   }, [selectedStatus, orders]);
 
+  // TODO: Implement complete and cancel order functionality
+
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>

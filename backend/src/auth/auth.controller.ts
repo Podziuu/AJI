@@ -86,4 +86,9 @@ export class AuthController {
       throw new UnauthorizedException(err.message);
     }
   }
+
+  @Post('/logout')
+  logout(@Res({ passthrough: true })  res: Response) {
+    return this.authService.logout(res);
+  }
 }

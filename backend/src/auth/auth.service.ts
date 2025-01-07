@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDTO } from './dto/loginUserDTO';
 import { Role } from '@prisma/client';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -132,5 +133,11 @@ export class AuthService {
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
+  }
+
+  logout(res: any) {
+    res.clearCookie('refreshToken');
+
+    return { message: 'Logout successful' };
   }
 }

@@ -5,6 +5,8 @@ import {
 import { useUserStore } from "@/store";
 import { NavLink } from "react-router";
 import { Button } from "./ui/button";
+import apiClient from "@/lib/apiClient";
+import { useNavigate } from "react-router";
 
 const navItems = {
   CLIENT: [
@@ -22,11 +24,17 @@ const navItems = {
 };
 
 const Navbar = () => {
-  const { user } = useUserStore();
+  const { user, clearUser } = useUserStore();
+  const navigate = useNavigate();
+
+  const clickHandler = async () => {
+    await apiClient.post("/auth/logout");
+    clearUser();
+    navigate("/login");
+  };
 
   const role = user?.role || "CLIENT";
   const availableNavItems = navItems[role];
-  // TODO: Implement logout
   return (
     <NavigationMenu className="border px-4 py-4 rounded-full border-black mx-auto mt-2 space-x-6">
       {availableNavItems.map((item) => (
@@ -34,7 +42,7 @@ const Navbar = () => {
           <NavLink to={item.path}>{item.label}</NavLink>
         </NavigationMenuLink>
       ))}
-      <Button>Logout</Button>
+      <Button onClick={clickHandler}>Logout</Button>
     </NavigationMenu>
   );
 };
