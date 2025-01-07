@@ -14,6 +14,7 @@ import Reviews from "./pages/Reviews.tsx";
 import Cart from "./pages/Cart.tsx";
 import Unauthorized from "./pages/Unauthorized.tsx";
 import CartForm from "./pages/Checkout.tsx";
+import EditProduct from "./pages/EditProduct.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -29,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/orders" element={<Orders />} />
           <Route path="/initialize" element={<Init />} />
           <Route path="/reviews" element={<Reviews />} />
+          <Route path="/products/edit/:id" element={<EditProduct />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

@@ -19,6 +19,9 @@ export class ProductsService {
       where: {
         id,
       },
+      include: {
+        category: true,
+      },
     });
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -30,7 +33,7 @@ export class ProductsService {
     const products = await this.prisma.product.findMany({
       include: {
         category: true,
-      }
+      },
     });
     if (products.length === 0) {
       throw new NotFoundException('No products found');

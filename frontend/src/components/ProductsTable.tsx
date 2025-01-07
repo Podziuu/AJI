@@ -12,8 +12,9 @@ import { Label } from "./ui/label";
 import { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
 import { Button } from "./ui/button";
-import { useStore } from "@/store";
+import { useStore, useUserStore } from "@/store";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router";
 
 const ProductsTable = ({
   products,
@@ -27,6 +28,10 @@ const ProductsTable = ({
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const { addToCart } = useStore();
   const { toast } = useToast();
+  const { user } = useUserStore();
+  const navigate = useNavigate();
+
+  console.log(user);
 
   useEffect(() => {
     let filtered = products;
@@ -49,6 +54,11 @@ const ProductsTable = ({
   const clickHandler = (product: Product) => {
     addToCart(product);
     toast({ title: "Product added to cart" });
+  };
+
+  const editProduct = (id: string) => {
+    console.log(id);
+    navigate("/products/edit/" + id);
   };
 
   return (
@@ -88,7 +98,15 @@ const ProductsTable = ({
         <TableBody>
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <TableRow key={product.id}>
+              <TableRow
+                key={product.id}
+                onClick={
+                  user?.role === "WORKER"
+                    ? () => editProduct(product.id)
+                    : undefined
+                }
+                className={`${user?.role === "WORKER" ? "cursor-pointer" : ""}`}
+              >
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.price}</TableCell>
                 <TableCell>{product.weight}</TableCell>
