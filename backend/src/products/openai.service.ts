@@ -27,13 +27,13 @@ export class OpenAiService {
           {
             role: "system",
             content: `You are an SEO content generator. Your task is to create an SEO-optimized description for a product based on the provided details. 
-            The description should be written in HTML format and include:
-            - A compelling headline that grabs attention (using <h1> or <h2> tags).
+            The description should be written in plain text format and include:
+            - A compelling headline that grabs attention.
             - A concise introductory paragraph that includes the main keywords.
-            - A list of features or benefits of the product (using <ul> and <li> tags).
+            - A list of features or benefits of the product in bullet points.
             - A closing paragraph with a call to action, encouraging users to learn more or purchase the product.
             
-            Your descriptions should be engaging, well-structured, and use keywords naturally to improve search engine visibility while being user-friendly.`,
+            Your descriptions should be engaging, well-structured, and use keywords naturally to improve search engine visibility while being user-friendly.`
           },
           {
             role: "user",
