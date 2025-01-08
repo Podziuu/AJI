@@ -50,7 +50,7 @@ const CheckoutForm = ({ cart }: any) => {
 
       const result = response.data;
 
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         toast({
           title: "Order failed",
           description: result.message,
