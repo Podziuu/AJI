@@ -51,6 +51,10 @@ const useStore = create<Store>()(
           }
           return { cart: updatedCart };
         }),
+      clearCart: () =>
+        set(() => ({
+          cart: [],
+        })),
     }),
     {
       name: "cart-storage",
