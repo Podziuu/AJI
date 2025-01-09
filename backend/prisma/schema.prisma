@@ -71,6 +71,7 @@ model Review {
   orderId   String   @unique 
   rating    Int      
   content   String
+  reviewDate DateTime @default(now())
   order     Order    @relation(fields: [orderId], references: [id])
 }
 

@@ -13,11 +13,17 @@ interface Order {
   id: string;
   confirmedAt?: Date;
   createdAt: Date;
-  review?: string;
+  review?: Review;
   status: Status;
   statusId: string;
   userId: string;
   orderItems: OrderItem[];
+}
+
+interface Review {
+  id: string;
+  rating: number;
+  content: string;
 }
 
 interface Product {
@@ -68,7 +74,7 @@ enum Role {
 }
 
 type UserStore = {
-    user: User | null;
-    setUser: (user: User) => void;
-    clearUser: () => void;
-}
+  user: User | null;
+  setUser: (user: User) => void;
+  clearUser: () => void;
+};

@@ -12,7 +12,7 @@ const navItems = {
   CLIENT: [
     { path: "/", label: "Products" },
     { path: "/cart", label: "Cart" },
-    { path: "/reviews", label: "Reviews" },
+    { path: "/clientOrders", label: "My orders" },
   ],
   WORKER: [
     { path: "/", label: "Products" },
