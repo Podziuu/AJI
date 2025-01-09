@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import apiClient from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
+import ReviewCard from "./ReviewCard";
 
 const UnfulfilledOrdersTable = ({
   orders,
@@ -110,7 +111,7 @@ const UnfulfilledOrdersTable = ({
                 </div>
               </TableCell>
               <TableCell>{getTotalPrice(order.orderItems)}</TableCell>
-              {showActions && (
+              {showActions ? (
                 <TableCell>
                   <div className="space-x-6">
                     <Button
@@ -131,7 +132,15 @@ const UnfulfilledOrdersTable = ({
                     </Button>
                   </div>
                 </TableCell>
-              )}
+              ) : (
+                order.review ? (
+                  <ReviewCard review={order.review} orderId={order.id} />
+                ) : (
+                  <span>Order has no review</span>
+                )
+                
+              ) }
+              
             </TableRow>
           ))
         ) : (

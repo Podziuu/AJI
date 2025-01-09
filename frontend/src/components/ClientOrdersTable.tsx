@@ -82,9 +82,6 @@ const ClientOrdersTable = ({ orders }: { orders: Order[] }) => {
                   {order.status.name === "CANCELLED" ||
                   order.status.name === "COMPLETED" ? (
                     order.review ? (
-                      // <Button onClick={() => order.review && ViewReviewHandler(order.review)}>
-                      //     View your opinion
-                      // </Button>
                       <ReviewCard review={order.review} orderId={order.id} />
                     ) : (
                       <Button onClick={() => AddReviewHandler(order)}>
