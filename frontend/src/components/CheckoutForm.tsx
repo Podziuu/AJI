@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router";
 import apiClient from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
+import { useStore } from "@/store";
 import { useUserStore } from "@/store";
 
 const formSchema = z.object({
@@ -26,6 +27,7 @@ const CheckoutForm = ({ cart }: any) => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { clearCart } = useStore();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,10 +63,10 @@ const CheckoutForm = ({ cart }: any) => {
           });
         }
 
-        navigate("/");
-      } catch (err) {
-        console.log(err);
-      }
+      clearCart();
+      navigate("/");
+    } catch (err) {
+      console.log(err);
     }
   };
   return (

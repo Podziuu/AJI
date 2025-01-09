@@ -60,6 +60,7 @@ type Store = {
   addToCart: (product: Product) => void;
   removeFromCart: (product: Product) => void;
   reduceQuantity: (product: Product) => void;
+  clearCart: () => void;
 };
 
 interface User {
