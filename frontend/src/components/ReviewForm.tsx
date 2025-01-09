@@ -49,22 +49,20 @@ const ReviewForm = ({ order }: { order: Order }) => {
     };
 
     try {
-      console.log(requestBody);
-      const respone = await apiClient.post(
+      const response = await apiClient.post(
         `/orders/${order.id}/opinions`,
         requestBody
       );
 
-      const result = respone.data;
+      const result = response.data;
 
-      //TODO przerobic jak jest sukces
-      //   if (respone.status !== 200) {
-      //     toast({
-      //         title: "Couldnt add review",
-      //         description: result.message,
-      //         variant: "destructive",
-      //     });
-      //   }
+        if (response.status !== 201) {
+          toast({
+              title: "Couldnt add review",
+              description: result.message,
+              variant: "destructive",
+          });
+        }
 
       navigate("/clientOrders");
     } catch (err: any) {

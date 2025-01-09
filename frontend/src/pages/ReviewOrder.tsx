@@ -13,10 +13,6 @@ const ReviewOrder = () => {
   const { state } = useLocation();
   const order = state?.order;
 
-  console.log(order);
-
-  console.log(!order);
-
   if (!order) {
     return <NoOrder />;
   }

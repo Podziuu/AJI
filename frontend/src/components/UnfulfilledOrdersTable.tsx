@@ -63,7 +63,6 @@ const UnfulfilledOrdersTable = ({
     try {
       const response = await apiClient.patch(`/orders/${orderId}`, requestBody);
       const result = response.data;
-      console.log(response.status);
       if (response.status !== 200) {
         toast({
           title: "Order failed",

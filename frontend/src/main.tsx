@@ -10,7 +10,6 @@ import Login from "./pages/Login.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Orders from "./pages/Orders.tsx";
 import Init from "./pages/Init.tsx";
-import Reviews from "./pages/Reviews.tsx";
 import Cart from "./pages/Cart.tsx";
 import Unauthorized from "./pages/Unauthorized.tsx";
 import CartForm from "./pages/Checkout.tsx";

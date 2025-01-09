@@ -84,7 +84,6 @@ const EditProductForm = ({ product }: { product: Product }) => {
       const response = await apiClient.get(
         `/products/${product.id}/seo-description`
       );
-      console.log(response.data);
       form.setValue("description", response.data);
       setIsDisabled(false);
     } catch (err) {
