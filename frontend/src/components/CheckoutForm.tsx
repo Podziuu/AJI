@@ -63,10 +63,11 @@ const CheckoutForm = ({ cart }: any) => {
           });
         }
 
-      clearCart();
-      navigate("/");
-    } catch (err) {
-      console.log(err);
+        clearCart();
+        navigate("/");
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
   return (
