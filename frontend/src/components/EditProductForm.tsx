@@ -24,10 +24,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
-  description: z.string().min(10).max(1000),
+  description: z.string().min(10).max(10000),
   categoryId: z.string().min(2).max(50),
   weight: z.number().min(0).max(10000),
   price: z.number().min(0).max(10000),
@@ -35,6 +36,9 @@ const formSchema = z.object({
 
 const EditProductForm = ({ product }: { product: Product }) => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,6 +64,7 @@ const EditProductForm = ({ product }: { product: Product }) => {
       const response = await apiClient.put(`/products/${product.id}`, values);
       if (response.status === 200) {
         toast({ title: "Product updated successfully!" });
+        navigate("/");
       } else {
         toast({
           title: "Error updating product",
@@ -69,6 +74,23 @@ const EditProductForm = ({ product }: { product: Product }) => {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const response = await apiClient.get(
+        `/products/${product.id}/seo-description`
+      );
+      console.log(response.data);
+      form.setValue("description", response.data);
+      setIsDisabled(false);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,12 +120,26 @@ const EditProductForm = ({ product }: { product: Product }) => {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea className="resize-none" disabled {...field} />
+                <Textarea
+                  className="resize-none"
+                  disabled={isDisabled}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <Button
+          onClick={(e) => clickHandler(e)}
+          className="bg-blue-800 hover:bg-blue-900"
+        >
+          {isLoading ? (
+            <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Optimize description"
+          )}
+        </Button>
         <FormField
           control={form.control}
           name="categoryId"
