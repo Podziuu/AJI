@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router";
 import apiClient from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
+import { useUserStore } from "@/store";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -22,6 +23,7 @@ const formSchema = z.object({
 });
 
 const CheckoutForm = ({ cart }: any) => {
+  const { user } = useUserStore();
   const navigate = useNavigate();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,32 +37,34 @@ const CheckoutForm = ({ cart }: any) => {
 
   // @ts-ignore
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const requestBody = {
-      userId: "96a48b2a-8b59-442d-a6a2-6af92848c6fc",
-      statusId: "27fc5aa1-083d-46dc-a2b7-d79dae4c47bb",
+    if (user?.id) {
+      const requestBody = {
+        userId: user.id,
+        statusId: "27fc5aa1-083d-46dc-a2b7-d79dae4c47bb",
 
-      orderItems: cart.map((item: any) => ({
-        productId: item.id,
-        quantity: item.quantity,
-      })),
-    };
+        orderItems: cart.map((item: any) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+      };
 
-    try {
-      const response = await apiClient.post("/orders", requestBody); //, {
+      try {
+        const response = await apiClient.post("/orders", requestBody);
 
-      const result = response.data;
+        const result = response.data;
 
-      if (response.status !== 201) {
-        toast({
-          title: "Order failed",
-          description: result.message,
-          variant: "destructive",
-        });
+        if (response.status !== 201) {
+          toast({
+            title: "Order failed",
+            description: result.message,
+            variant: "destructive",
+          });
+        }
+
+        navigate("/");
+      } catch (err) {
+        console.log(err);
       }
-
-      navigate("/");
-    } catch (err) {
-      console.log(err);
     }
   };
   return (

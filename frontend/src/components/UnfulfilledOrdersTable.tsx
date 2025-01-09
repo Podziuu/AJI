@@ -10,11 +10,10 @@ import {
 import { getTotalPrice } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import apiClient from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
-
 
 const UnfulfilledOrdersTable = ({
   orders,
@@ -52,18 +51,18 @@ const UnfulfilledOrdersTable = ({
       case "completed":
         return "bg-gray-500";
     }
-  }
+  };
 
-  const changeOrderStatusHandler = async (orderId : string, status : string ) => {
+  const changeOrderStatusHandler = async (orderId: string, status: string) => {
     const requestBody = {
-        op: "replace",
-        path: "/status",
-        value: status.toUpperCase(),
+      op: "replace",
+      path: "/status",
+      value: status.toUpperCase(),
     };
     try {
       const response = await apiClient.patch(`/orders/${orderId}`, requestBody);
       const result = response.data;
-      console.log(response.status)
+      console.log(response.status);
       if (response.status !== 200) {
         toast({
           title: "Order failed",
@@ -72,13 +71,10 @@ const UnfulfilledOrdersTable = ({
         });
       }
       navigate(0);
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
     }
-  }
-
-  // TODO: Implement complete and cancel order functionality
+  };
 
   return (
     <Table className="table-auto">
@@ -97,7 +93,9 @@ const UnfulfilledOrdersTable = ({
           filteredOrders.map((order) => (
             <TableRow key={order.id}>
               <TableCell>
-                <Badge className={getBadgeColor(order.status.name)}>{order.status.name}</Badge>
+                <Badge className={getBadgeColor(order.status.name)}>
+                  {order.status.name}
+                </Badge>
               </TableCell>
               <TableCell className="font-medium">
                 {order.createdAt.toLocaleString()}
@@ -115,8 +113,22 @@ const UnfulfilledOrdersTable = ({
               {showActions && (
                 <TableCell>
                   <div className="space-x-6">
-                    <Button onClick={() => changeOrderStatusHandler(order.id, "COMPLETED")} className="text-xs">Complete</Button>
-                    <Button onClick={() => changeOrderStatusHandler(order.id, "CANCELLED")} className="text-xs">Cancel</Button>
+                    <Button
+                      onClick={() =>
+                        changeOrderStatusHandler(order.id, "COMPLETED")
+                      }
+                      className="text-xs"
+                    >
+                      Complete
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        changeOrderStatusHandler(order.id, "CANCELLED")
+                      }
+                      className="text-xs"
+                    >
+                      Cancel
+                    </Button>
                   </div>
                 </TableCell>
               )}
