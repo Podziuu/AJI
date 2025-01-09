@@ -7,10 +7,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useLocation } from "react-router";
+import NoOrder from "./NoOrder";
 
 const ReviewOrder = () => {
   const { state } = useLocation();
   const order = state?.order;
+
+  console.log(order);
+
+  console.log(!order);
+
+  if (!order) {
+    return <NoOrder />;
+  }
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">

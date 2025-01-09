@@ -132,15 +132,15 @@ const UnfulfilledOrdersTable = ({
                     </Button>
                   </div>
                 </TableCell>
-              ) : (
-                order.review ? (
+              ) : order.review ? (
+                <TableCell>
                   <ReviewCard review={order.review} orderId={order.id} />
-                ) : (
+                </TableCell>
+              ) : (
+                <TableCell>
                   <span>Order has no review</span>
-                )
-                
-              ) }
-              
+                </TableCell>
+              )}
             </TableRow>
           ))
         ) : (

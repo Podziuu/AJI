@@ -2,7 +2,7 @@ import ClientOrdersTable from "@/components/ClientOrdersTable";
 import Navbar from "@/components/Navbar";
 import apiClient from "@/lib/apiClient";
 import { useUserStore } from "@/store";
-import { Loader } from "lucide-react";
+import Loader from "@/components/Loader";
 import { useEffect, useState } from "react";
 
 const ClientOrders = () => {

@@ -17,7 +17,6 @@ const navItems = {
   WORKER: [
     { path: "/", label: "Products" },
     { path: "/cart", label: "Cart" },
-    { path: "/reviews", label: "Reviews" },
     { path: "/orders", label: "Orders" },
     { path: "/initialize", label: "Initialize" },
   ],
