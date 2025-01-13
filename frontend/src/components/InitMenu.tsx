@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 
+// Create form schema for individual products
 const createFormSchema = (allowedCategories: Category[]) => {
   const allowedIds = allowedCategories.map((category) => category.id);
 
@@ -18,28 +19,30 @@ const createFormSchema = (allowedCategories: Category[]) => {
   });
 };
 
+// Create products schema
 const createProductsSchema = (allowedCategories: Category[]) => {
-    const productSchema = createFormSchema(allowedCategories);
-    return z.object({
-        Products: z.array(productSchema),
-    });
+  const productSchema = createFormSchema(allowedCategories);
+  return z.object({
+    Products: z.array(productSchema),
+  });
 };
 
 const InitMenu = () => {
   const [allowedCategories, setAllowedCategories] = useState<Category[]>([]);
-  const [schema, setSchema] = useState<ReturnType<
-    typeof createProductsSchema
-  > | null>(null);
+  const [jsonInput, setJsonInput] = useState<string>("");
 
   const form = useForm<z.infer<ReturnType<typeof createProductsSchema>>>({
     resolver: zodResolver(createProductsSchema(allowedCategories)),
+    defaultValues: {
+      Products: [], // Initialize with an empty array
+    },
   });
 
   useEffect(() => {
     const fetchAllowedCategories = async () => {
       try {
-        const respone = await apiClient.get("/categories");
-        setAllowedCategories(respone.data);
+        const response = await apiClient.get("/categories");
+        setAllowedCategories(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -49,19 +52,45 @@ const InitMenu = () => {
 
   useEffect(() => {
     if (allowedCategories.length > 0) {
-      const newSchema = createProductsSchema(allowedCategories);
-      setSchema(newSchema);
-      form.reset();
+      form.reset(); // Reset form on category change
     }
   }, [allowedCategories, form]);
 
   const onSubmit = async (data: z.infer<ReturnType<typeof createProductsSchema>>) => {
-   try {
-    console.log(data)
-    // const response = await apiClient.put()
-   } catch (err) {
-    console.log(err)
-   }
+    try {
+      console.log(data); // Handle the submitted data
+      // Example API call to save products
+      // await apiClient.post("/products", data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleJsonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const inputValue = e.target.value; // Get the input value
+    setJsonInput(inputValue); // Update JSON input state
+
+    try {
+      const parsedJson = JSON.parse(inputValue); // Try parsing the JSON
+
+      // Check if parsedJson has a Products key and it's an array
+      if (Array.isArray(parsedJson.Products)) {
+        // Validate against the schema
+        const result = createProductsSchema(allowedCategories).safeParse({ Products: parsedJson.Products });
+
+        if (result.success) {
+          form.setValue("Products", result.data.Products); // Set parsed data into the form
+        } else {
+          console.error("Validation errors:", result.error.flatten());
+          form.setValue("Products", []); // Reset to empty array if invalid structure
+        }
+      } else {
+        form.setValue("Products", []); // Reset to empty array if invalid structure
+      }
+    } catch (error) {
+      console.error("Invalid JSON:", error);
+      form.setValue("Products", []); // Reset to empty array on parsing error
+    }
   };
 
   return (
@@ -76,18 +105,17 @@ const InitMenu = () => {
               <FormItem>
                 <FormLabel>Products JSON</FormLabel>
                 <FormControl>
-                <Textarea
-                  placeholder="Paste JSON here"
-                  className="resize-none"
-                  {...field}
-                  value={field.value ? JSON.stringify(field.value, null, 2) : ""}
-                    onChange={(e) => field.onChange(e.target.value)}
-                />
+                  <Textarea
+                    placeholder="Paste JSON here"
+                    className="resize-none h-[500px]"
+                    value={jsonInput} // Use the JSON input state
+                    onChange={handleJsonChange} // Handle change
+                  />
                 </FormControl>
                 <FormDescription>
                   Please provide a valid JSON array of products.
                 </FormDescription>
-                <FormMessage />
+                <FormMessage /> {/* Render validation messages here */}
               </FormItem>
             )}
           />
