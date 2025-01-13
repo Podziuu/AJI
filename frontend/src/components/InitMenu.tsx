@@ -3,8 +3,18 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
+import { toast } from "sonner"
 
 const createFormSchema = (allowedCategories: Category[]) => {
   const allowedIds = allowedCategories.map((category) => category.id);
@@ -18,22 +28,45 @@ const createFormSchema = (allowedCategories: Category[]) => {
   });
 };
 
-const createProductsSchema = (allowedCategories: Category[]) => {
-    const productSchema = createFormSchema(allowedCategories);
-    return z.object({
-        Products: z.array(productSchema),
-    });
+const createProductsSchema = () => {
+  return z.object({
+    Products: z.string().refine((value) => {
+      try {
+        const parsed = JSON.parse(value);
+        if (!Array.isArray(parsed)) return false;
+        return true;
+      } catch {
+        return false;
+      }
+    }, "Invalid JSON array format"),
+  });
 };
 
 const InitMenu = () => {
   const [allowedCategories, setAllowedCategories] = useState<Category[]>([]);
-  const [schema, setSchema] = useState<ReturnType<
-    typeof createProductsSchema
-  > | null>(null);
 
   const form = useForm<z.infer<ReturnType<typeof createProductsSchema>>>({
-    resolver: zodResolver(createProductsSchema(allowedCategories)),
+    resolver: zodResolver(createProductsSchema()),
+    defaultValues: {
+      Products: "",
+    },
   });
+
+  const handleValidationErrors = (error: any) => {
+    if (error instanceof z.ZodError) {
+      error.errors.forEach((err) => {
+        toast("Validation error", {
+          description: `Field "${err.path.join(".")}": ${err.message}`,
+          duration: 5000,
+        })
+      });
+    } else {
+      toast("Validation error", {
+        description: error.message,
+        duration: 5000,
+      })
+    }
+  };
 
   useEffect(() => {
     const fetchAllowedCategories = async () => {
@@ -47,26 +80,26 @@ const InitMenu = () => {
     fetchAllowedCategories();
   }, []);
 
-  useEffect(() => {
-    if (allowedCategories.length > 0) {
-      const newSchema = createProductsSchema(allowedCategories);
-      setSchema(newSchema);
-      form.reset();
+  const onSubmit = async (
+    data: z.infer<ReturnType<typeof createProductsSchema>>
+  ) => {
+    try {
+      console.log(data);
+      const parsed = JSON.parse(data.Products);
+      console.log(parsed);
+      const productSchema = createFormSchema(allowedCategories);
+      parsed.forEach((product: any) => productSchema.parse(product));
+      // TODO send data to backend
+      // const response = await apiClient.put()
+    } catch (err) {
+      console.log(err);
+      handleValidationErrors(err);
     }
-  }, [allowedCategories, form]);
-
-  const onSubmit = async (data: z.infer<ReturnType<typeof createProductsSchema>>) => {
-   try {
-    console.log(data)
-    // const response = await apiClient.put()
-   } catch (err) {
-    console.log(err)
-   }
   };
 
   return (
-    <div>
-      <p>Initialize products</p>
+    <div className="p-8">
+      <h2>Initialize products</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
@@ -76,13 +109,11 @@ const InitMenu = () => {
               <FormItem>
                 <FormLabel>Products JSON</FormLabel>
                 <FormControl>
-                <Textarea
-                  placeholder="Paste JSON here"
-                  className="resize-none"
-                  {...field}
-                  value={field.value ? JSON.stringify(field.value, null, 2) : ""}
-                    onChange={(e) => field.onChange(e.target.value)}
-                />
+                  <Textarea
+                    placeholder="Paste JSON here"
+                    className="resize-none h-72"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   Please provide a valid JSON array of products.
@@ -91,7 +122,9 @@ const InitMenu = () => {
               </FormItem>
             )}
           />
-          <button type="submit" className="btn">Submit</button>
+          <Button type="submit" className="btn">
+            Submit
+          </Button>
         </form>
       </Form>
     </div>
