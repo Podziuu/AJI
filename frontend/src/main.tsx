@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "./pages/Home.tsx";
 import Register from "./pages/Register.tsx";
 import { Toaster } from "./components/ui/toaster.tsx";
+import { Toaster as Sooner } from "@/components/ui/sonner";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Login from "./pages/Login.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -16,6 +17,7 @@ import CartForm from "./pages/Checkout.tsx";
 import EditProduct from "./pages/EditProduct.tsx";
 import ClientOrders from "./pages/ClientOrders.tsx";
 import ReviewOrder from "./pages/ReviewOrder.tsx";
+import { XCircle } from "lucide-react";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -39,6 +41,13 @@ createRoot(document.getElementById("root")!).render(
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
+      <Sooner
+        richColors
+        toastOptions={{
+          className:
+            "border-destructive bg-destructive text-destructive-foreground",
+        }}
+      />
     </BrowserRouter>
   </StrictMode>
 );
