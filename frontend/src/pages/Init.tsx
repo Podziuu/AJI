@@ -20,7 +20,7 @@ const Init = () => {
   return (
     <div className="h-screen">
       <Navbar />
-      {products.length !== 0 ? (
+      {products.length === 0 ? (
           <InitMenu/>
       ) : (
         <div className="mt-60">
