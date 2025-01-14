@@ -23,7 +23,7 @@ const formSchema = z.object({
   phone: z.string().regex(/^\d{9}$/, "Phone number must be exactly 9 digits"),
 });
 
-const CheckoutForm = ({ cart }: any) => {
+const CheckoutForm = ({ cart } : {cart: Product[]}) => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -37,14 +37,13 @@ const CheckoutForm = ({ cart }: any) => {
     },
   });
 
-  // @ts-ignore
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async () => {
     if (user?.id) {
       const requestBody = {
         userId: user.id,
         statusId: "27fc5aa1-083d-46dc-a2b7-d79dae4c47bb",
 
-        orderItems: cart.map((item: any) => ({
+        orderItems: cart.map((item: Product) => ({
           productId: item.id,
           quantity: item.quantity,
         })),
@@ -61,6 +60,7 @@ const CheckoutForm = ({ cart }: any) => {
             description: result.message,
             variant: "destructive",
           });
+          return;
         }
 
         clearCart();

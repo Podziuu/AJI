@@ -18,10 +18,8 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import ReviewCard from "./ReviewCard";
-import { useState } from "react";
 
 const ClientOrdersTable = ({ orders }: { orders: Order[] }) => {
-  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const navigate = useNavigate();
 
   const getBadgeColor = (status: string) => {
@@ -39,10 +37,6 @@ const ClientOrdersTable = ({ orders }: { orders: Order[] }) => {
 
   const AddReviewHandler = (order: Order) => {
     navigate("/review", { state: { order } });
-  };
-
-  const ViewReviewHandler = (review: Review) => {
-    setSelectedReview(review);
   };
 
   return (
@@ -114,9 +108,6 @@ const ClientOrdersTable = ({ orders }: { orders: Order[] }) => {
           )}
         </TableBody>
       </Table>
-      {/* {selectedReview && (
-        <ReviewCard review={selectedReview}/>
-    )} */}
     </>
   );
 };

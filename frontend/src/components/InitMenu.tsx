@@ -1,7 +1,7 @@
 import apiClient from "@/lib/apiClient";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -14,7 +14,7 @@ import {
 } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 const createFormSchema = (allowedCategories: Category[]) => {
   const allowedIds = allowedCategories.map((category) => category.id);
@@ -52,19 +52,19 @@ const InitMenu = () => {
     },
   });
 
-  const handleValidationErrors = (error: any) => {
+  const handleValidationErrors = (error: ZodError | Error) => {
     if (error instanceof z.ZodError) {
       error.errors.forEach((err) => {
         toast("Validation error", {
           description: `Field "${err.path.join(".")}": ${err.message}`,
           duration: 5000,
-        })
+        });
       });
     } else {
       toast("Validation error", {
         description: error.message,
         duration: 5000,
-      })
+      });
     }
   };
 
@@ -86,13 +86,16 @@ const InitMenu = () => {
     try {
       const parsed = JSON.parse(data.Products);
       const productSchema = createFormSchema(allowedCategories);
-      parsed.forEach((product: any) => productSchema.parse(product));
+      parsed.forEach((product: Product) => productSchema.parse(product));
 
-      const response = await apiClient.post("/init", parsed)
-      toast.success("Products loaded successfully!")
+      await apiClient.post("/init", parsed);
+      toast.success("Products loaded successfully!");
     } catch (err) {
-      console.log(err);
-      handleValidationErrors(err);
+      if (err instanceof Error || err instanceof ZodError) {
+        handleValidationErrors(err);
+      } else {
+        console.log("Unkown error:", err);
+      }
     }
   };
 
@@ -117,7 +120,7 @@ const InitMenu = () => {
                 <FormDescription>
                   Please provide a valid JSON array of products.
                 </FormDescription>
-                <FormMessage /> 
+                <FormMessage />
               </FormItem>
             )}
           />

@@ -65,10 +65,11 @@ const UnfulfilledOrdersTable = ({
       const result = response.data;
       if (response.status !== 200) {
         toast({
-          title: "Order failed",
+          title: "Couldnt change order status",
           description: result.message,
           variant: "destructive",
         });
+        return;
       }
       navigate(0);
     } catch (err) {

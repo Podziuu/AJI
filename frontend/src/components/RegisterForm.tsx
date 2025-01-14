@@ -49,7 +49,7 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { confirmPassword, ...data } = values;
+    const { confirmPassword: _confirmPassword, ...data } = values;
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -65,6 +65,7 @@ const RegisterForm = () => {
           description: result.message,
           variant: "destructive",
         });
+        return;
       }
       window.localStorage.setItem("accessToken", result.at);
       navigate("/");

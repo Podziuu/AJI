@@ -36,7 +36,7 @@ const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: Role[] }) => {
     };
 
     checkAuth();
-  }, []);
+  }, [clearUser, setUser]);
 
   if (loading) {
     return <div>Loading...</div>;

@@ -17,7 +17,6 @@ import CartForm from "./pages/Checkout.tsx";
 import EditProduct from "./pages/EditProduct.tsx";
 import ClientOrders from "./pages/ClientOrders.tsx";
 import ReviewOrder from "./pages/ReviewOrder.tsx";
-import { XCircle } from "lucide-react";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

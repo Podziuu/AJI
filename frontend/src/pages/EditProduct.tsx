@@ -26,7 +26,7 @@ const EditProduct = () => {
       }
     };
     fetchProduct();
-  }, []);
+  }, [id]);
 
   return (
     <div className="flex flex-col">

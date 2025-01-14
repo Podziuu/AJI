@@ -55,6 +55,7 @@ const LoginForm = () => {
           description: result.message,
           variant: "destructive",
         });
+        return;
       }
       window.localStorage.setItem("accessToken", result.at);
       navigate("/");

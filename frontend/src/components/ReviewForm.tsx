@@ -24,6 +24,7 @@ import {
 import { getTotalPrice } from "@/lib/utils";
 import Rating from "@mui/material/Rating";
 import { Textarea } from "./ui/textarea";
+import axios from "axios";
 
 const formSchema = z.object({
   rating: z.number().min(1).max(5),
@@ -56,23 +57,32 @@ const ReviewForm = ({ order }: { order: Order }) => {
 
       const result = response.data;
 
-        if (response.status !== 201) {
-          toast({
-              title: "Couldnt add review",
-              description: result.message,
-              variant: "destructive",
-          });
-        }
+      if (response.status !== 201) {
+        toast({
+          title: "Couldnt add review",
+          description: result.message,
+          variant: "destructive",
+        });
+        return;
+      }
 
       navigate("/clientOrders");
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.message || "An unexpected error occurred.";
-      toast({
-        title: "Couldn’t add review",
-        description: errorMessage,
-        variant: "destructive",
-      });
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const errorMessage =
+          err.response?.data?.message || "An unexpected error occurred.";
+        toast({
+          title: "Couldn’t add review",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Couldn’t add review",
+          description: "An unexpected error occurred.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -119,7 +129,7 @@ const ReviewForm = ({ order }: { order: Order }) => {
                       <Rating
                         name="simple-controlled"
                         value={field.value}
-                        onChange={(event, newValue) => {
+                        onChange={(_event, newValue) => {
                           field.onChange(newValue);
                         }}
                       />
